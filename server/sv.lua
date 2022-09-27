@@ -30,6 +30,20 @@ ESX.RegisterServerCallback("xHotel:getPlayerBucket", function(source, cb)
     cb(GetPlayerRoutingBucket(source))
 end)
 
+local function dateRented()
+    local date = ('%s/%s/%s'):format(tonumber(os.date('%d'))+7, os.date('%m'), os.date('%Y'))
+
+    if tonumber(os.date('%d'))+7 <= 31 then
+        return date
+    else
+        local day = 31 - tonumber(os.date('%d'))
+        local calcule = 7 - day
+        local result  = 0 + calcule
+        date = ('%s/%s/%s'):format(tonumber(result), tonumber(os.date('%m'))+1, os.date('%Y'))
+        return date
+    end
+end
+
 RegisterNetEvent("xHotel:buy")
 AddEventHandler("xHotel:buy", function(price, id)
     local source = source
@@ -43,11 +57,11 @@ AddEventHandler("xHotel:buy", function(price, id)
             if result[1] == nil then
                 MySQL.Async.execute("UPDATE hotel SET owner = @owner, dateRented = @dateRented WHERE id = @id", {
                     ['@owner'] = xPlayer.getIdentifier(),
-                    ['@dateRented'] = ('%s/%s/%s'):format(tonumber(os.date('%d'))+7, os.date('%m'), os.date('%Y')),
+                    ['@dateRented'] = dateRented(),
                     ['@id'] = id
                 }, function()
                     xPlayer.removeAccountMoney('bank', price)
-                    TriggerClientEvent('esx:showNotification', source, ('(~y~Information~s~)\nLe prochain loyer sera le ~r~%s/%s/%s~s~.'):format(tonumber(os.date('%d'))+7, os.date('%m'), os.date('%Y')))
+                    TriggerClientEvent('esx:showNotification', source, ('(~y~Information~s~)\nLe prochain loyer sera le ~r~%s~s~.'):format(dateRented()))
                 end)
             else
                 TriggerClientEvent('esx:showNotification', source, '(~r~Erreur~s~)\nVous avez déjà une chambre en location.')
