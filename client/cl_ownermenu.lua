@@ -18,10 +18,10 @@ end
 
 local liste = {}
 
-local function getListeSonner(id)
+local function getListeSonner()
     ESX.TriggerServerCallback("xHotel:getListeSonner", function(result) 
         liste = result
-    end, id)
+    end)
 end
 
 RegisterNetEvent("xHotel:notifsonner")
@@ -61,7 +61,7 @@ function OwnerMenu(id)
                             end
                         end
                     })
-                    RageUI.Button("Listes des personnes qui ont sonner", nil, {RightLabel = "→"}, true, {onSelected = function() getListeSonner(id) end}, sub_menu1)
+                    RageUI.Button("Listes des personnes qui ont sonner", nil, {RightLabel = "→"}, true, {onSelected = function() getListeSonner() end}, sub_menu1)
                     RageUI.Line()
                     RageUI.Button("Rendre la chambre", nil, {RightBadge = RageUI.BadgeStyle.Tick}, true, {
                         onSelected = function()
@@ -72,11 +72,13 @@ function OwnerMenu(id)
                 RageUI.IsVisible(sub_menu1, function()
                     if #liste > 0 then
                         for _,v in pairs(liste) do
-                            RageUI.Button("~r~→~s~ Faire entrer", nil, {RightLabel = ("~r~%s"):format(v.nom)}, true, {
-                                onSelected = function()
-                                    TriggerServerEvent("xHotel:enter", v.source, v.id, GetEntityCoords(PlayerPedId()))
-                                end
-                            })
+                            if v.id == id then
+                                RageUI.Button("~r~→~s~ Faire entrer", nil, {RightLabel = ("~r~%s"):format(v.nom)}, true, {
+                                    onSelected = function()
+                                        TriggerServerEvent("xHotel:enter", v.source, v.id, GetEntityCoords(PlayerPedId()))
+                                    end
+                                })
+                            end
                         end
                     else
                         RageUI.Separator("")
