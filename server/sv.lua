@@ -75,16 +75,12 @@ end)
 
 local listes = {}
 
-ESX.RegisterServerCallback("xHotel:getListeSonner", function(source, cb, id)
+ESX.RegisterServerCallback("xHotel:getListeSonner", function(source, cb)
     local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if (not xPlayer) then return end
-    for _,v in pairs(listes) do
-        if v.id == id then
-            cb(_)
-        end
-    end
+    cb(listes)
 end)
 
 RegisterNetEvent("xHotel:sonner")
