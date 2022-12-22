@@ -52,9 +52,9 @@ function OwnerMenu(id)
                 RageUI.IsVisible(mainMenu, function()
                     RageUI.Button("Ajouter un colocataire", nil, {RightLabel = "→"}, true, {
                         onSelected = function()
-                            local dst, playerTarget = ESX.Game.GetClosestPlayer()
+                            local playerTarget, dst = ESX.Game.GetClosestPlayer()
 
-                            if dst <= 1.5 and playerTarget ~= -1 then
+                            if playerTarget ~= -1 and dst <= 1.5 then
                                 TriggerServerEvent("xHotel:addColocataire", playerTarget, id)
                             else
                                 ESX.ShowNotification("(~r~Erreur~s~)\nAucun joueur à proximité.")
