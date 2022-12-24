@@ -290,11 +290,12 @@ AddEventHandler("xHotel:rendre", function(id)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if (not xPlayer) then return end
-    MySQL.Async.execute("UPDATE hotel SET owner = @owner, dateRented = @dateRented, chest = @chest, cloakroom = @cloakroom WHERE owner = @identifier", {
+    MySQL.Async.execute("UPDATE hotel SET owner = @owner, dateRented = @dateRented, chest = @chest, cloakroom = @cloakroom, colocataire = @colocataire WHERE owner = @identifier", {
         ['@owner'] = nil,
         ['@dateRented'] = nil,
         ['@chest'] = "[]",
         ['@cloakroom'] = "[]",
+        ["@colocataire"] = nil,
         ['@identifier'] = xPlayer.getIdentifier()
     }, function()
         TriggerClientEvent('esx:showNotification', source, '(~g~Succès~s~)\nVous pouvez sortir de la chambre.')
