@@ -76,6 +76,8 @@ function OwnerMenu(id)
                                 RageUI.Button("~r~→~s~ Faire entrer", nil, {RightLabel = ("~r~%s"):format(v.nom)}, true, {
                                     onSelected = function()
                                         TriggerServerEvent("xHotel:enter", v.source, v.id, GetEntityCoords(PlayerPedId()))
+                                        Wait(1000)
+                                        getListeSonner(id)
                                     end
                                 })
                             end
