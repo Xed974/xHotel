@@ -107,8 +107,12 @@ AddEventHandler("xHotel:enter", function(source, id, pos)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if (not xPlayer) then return end
-    table.remove(listes,  source)
-    TriggerClientEvent("xHotel:enterIn", source, id, pos)
+    for _,v in pairs(listes) do
+        if v.source == source then
+            table.remove(listes,  _)
+            TriggerClientEvent("xHotel:enterIn", source, id, pos)
+        end
+    end
 end)
 
 -- Chest
