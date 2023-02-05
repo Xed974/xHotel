@@ -307,12 +307,24 @@ AddEventHandler("xHotel:rendre", function(id)
 end)
 
 local function RemoveMoney(owner, price, date)
+    local xPlayers = ESX.GetPlayers()
+    for i = 1, #xPlayers, 1 do
+        local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+        if xPlayer.getIdentifier() == owner then
+            xPlayer.removeAccountMoney('bank', price)
+            MySQL.Async.execute("UPDATE hotel SET dateRented = @dataRented WHERE owner = @owner", {
+                ['@dateRented'] = date,
+                ['@owner'] = owner
+            }, function()end)
+            return
+        end
+    end
     MySQL.Async.fetchAll('SELECT accounts FROM users WHERE identifier = @identifier', { 
         ["@identifier"] = owner 
     }, function(result)
         local accounts = json.decode(result[1].accounts)
         if accounts.bank >= price then
-            accounts.bank = accounts.bank - tonumber(price)
+            accounts.bank = accounts.bank - price
             MySQL.Async.execute("UPDATE users SET accounts = @accounts WHERE identifier = @identifier", {
                 ['@accounts'] = json.encode(accounts),
                 ['@identifier'] = owner
@@ -338,7 +350,7 @@ CreateThread(function()
                 if v.dateRented ~= nil then
                     local date = os.date("%d/%m/%Y")
                     if date == v.dateRented and v.owner ~= nil then
-                        RemoveMoney(v.owner, v.price, ('%s/%s/%s'):format(tonumber(os.date('%d'))+7, os.date('%m'), os.date('%Y')))
+                        RemoveMoney(v.owner, tonumber(v.price), ('%s/%s/%s'):format(tonumber(os.date('%d'))+7, os.date('%m'), os.date('%Y')))
                     end
                 end
             end
