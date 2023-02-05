@@ -312,7 +312,7 @@ local function RemoveMoney(owner, price, date)
         local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
         if xPlayer.getIdentifier() == owner then
             xPlayer.removeAccountMoney('bank', price)
-            MySQL.Async.execute("UPDATE hotel SET dateRented = @dataRented WHERE owner = @owner", {
+            MySQL.Async.execute("UPDATE hotel SET dateRented = @dateRented WHERE owner = @owner", {
                 ['@dateRented'] = date,
                 ['@owner'] = owner
             }, function()end)
@@ -329,7 +329,7 @@ local function RemoveMoney(owner, price, date)
                 ['@accounts'] = json.encode(accounts),
                 ['@identifier'] = owner
             }, function()end)
-            MySQL.Async.execute("UPDATE hotel SET dateRented = @dataRented WHERE owner = @owner", {
+            MySQL.Async.execute("UPDATE hotel SET dateRented = @dateRented WHERE owner = @owner", {
                 ['@dateRented'] = date,
                 ['@owner'] = owner
             }, function()end)
